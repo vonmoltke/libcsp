@@ -21,10 +21,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <stdio.h>
 #include <csp/csp.h>
 
-/* Interfaces are stored in a linked list*/
-static csp_iface_t * interfaces = NULL;
+#include <csp/arch/csp_malloc.h>
 
-csp_iface_t * csp_iflist_get_by_name(char *name) {
+/* Interfaces are stored in a linked list*/
+static csp_iface_t *interfaces = NULL;
+
+csp_iface_t * csp_if_get_by_name(char *name)
+{
 	csp_iface_t *ifc = interfaces;
 	while(ifc) {
 		if (strncmp(ifc->name, name, 10) == 0)
@@ -34,8 +37,8 @@ csp_iface_t * csp_iflist_get_by_name(char *name) {
 	return ifc;
 }
 
-void csp_iflist_add(csp_iface_t *ifc) {
-
+int csp_if_register(csp_iface_t *ifc)
+{
 	/* Add interface to pool */
 	if (interfaces == NULL) {
 		/* This is the first interface to be added */
@@ -54,6 +57,48 @@ void csp_iflist_add(csp_iface_t *ifc) {
 		}
 	}
 
+	return 0;
+}
+
+static int csp_if_alloc_name(csp_iface_t *ifc, const char *name)
+{
+	int i, ifnum;
+
+	/* FIXME: allocate ifnumber */
+	ifnum = 0;
+
+	for (i = 0; i < 10; i++) {
+		snprintf(ifc->name, CSP_IFNAMSIZ, name, ifnum);
+		if (!csp_if_get_by_name(ifc->name))
+			return 0;
+		ifnum++;
+	}
+
+	return 0;
+}
+
+csp_iface_t *csp_if_alloc(const char *name)
+{
+	int ret;
+	csp_iface_t *ifc;
+
+	ifc = csp_malloc(sizeof(*ifc));
+	if (ifc != NULL) {
+		ret = csp_if_alloc_name(ifc, name);
+		if (ret < 0) {
+			csp_free(ifc);
+			ifc = NULL;
+		}
+	}
+
+	return ifc;
+}
+
+int csp_if_free(csp_iface_t *ifc)
+{
+	csp_free(ifc);
+
+	return 0;
 }
 
 #ifdef CSP_DEBUG
@@ -70,8 +115,8 @@ int csp_bytesize(char *buf, int len, unsigned long int n) {
 	} else {
 		size = n;
 		postfix = 'B';
- 	}
- 
+	}
+
 	return snprintf(buf, len, "%.1f%c", size, postfix);
 }
 

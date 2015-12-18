@@ -95,7 +95,7 @@ int csp_init(unsigned char address) {
 		return ret;
 
 	/* Loopback */
-	csp_iflist_add(&csp_if_lo);
+	csp_if_register(&csp_if_lo);
 
 	/* Register loopback route */
 	csp_route_set(my_address, &csp_if_lo, CSP_NODE_MAC);

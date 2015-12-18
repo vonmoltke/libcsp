@@ -122,7 +122,7 @@ static int csp_rtable_parse(char * buffer, int dry_run) {
 			}
 		}
 		//printf("Parsed %u/%u %u %s\r\n", address, netmask, mac, name);
-		csp_iface_t * ifc = csp_iflist_get_by_name(name);
+		csp_iface_t * ifc = csp_if_get_by_name(name);
 		if (ifc) {
 			if (dry_run == 0)
 				csp_rtable_set(address, netmask, ifc, mac);

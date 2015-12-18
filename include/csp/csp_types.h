@@ -180,10 +180,14 @@ typedef struct __attribute__((__packed__)) {
 struct csp_iface_s;
 typedef int (*nexthop_t)(struct csp_iface_s * interface, csp_packet_t *packet, uint32_t timeout);
 
+/** Maximum interface name length */
+#define CSP_IFNAMSIZ	10
+
 /** Interface struct */
 typedef struct csp_iface_s {
-	const char *name;			/**< Interface name (keep below 10 bytes) */
-	void * driver;				/**< Pointer to interface handler structure */
+	char name[CSP_IFNAMSIZ];		/**< Interface name */
+	void *priv;				/**< Pointer to interface private data */
+	void *driver;				/**< Pointer to interface handler structure */
 	nexthop_t nexthop;			/**< Next hop function */
 	uint16_t mtu;				/**< Maximum Transmission Unit of interface */
 	uint8_t split_horizon_off;	/**< Disable the route-loop prevention on if */

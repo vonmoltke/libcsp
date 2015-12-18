@@ -34,13 +34,10 @@ extern "C" {
  * can_frame struct and can_id types in include/linux/can.h
  */
 
-/** CAN Identifier */
-typedef uint32_t can_id_t;
-
 /** CAN Frame */
 typedef struct {
 	/** 32 bit CAN identifier */
-	can_id_t id;
+	uint32_t id;
 	/** Data Length Code */
 	uint8_t dlc;
 	/**< Frame Data - 0 to 8 bytes */
@@ -49,17 +46,9 @@ typedef struct {
 		uint16_t data16[4];
 		uint32_t data32[2];
 	};
-} can_frame_t;
+} csp_can_frame_t;
 
-typedef enum {
-	CAN_ERROR = 0,
-	CAN_NO_ERROR = 1,
-} can_error_t;
-
-int can_init(uint32_t id, uint32_t mask, struct csp_can_config *conf);
-int can_send(can_id_t id, uint8_t * data, uint8_t dlc);
-
-int csp_can_rx_frame(can_frame_t *frame, CSP_BASE_TYPE *task_woken);
+int csp_can_rx_frame(csp_iface_t *ifc, csp_can_frame_t *frame, CSP_BASE_TYPE *task_woken);
 
 #ifdef __cplusplus
 } /* extern "C" */

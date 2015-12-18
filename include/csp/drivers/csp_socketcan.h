@@ -18,8 +18,8 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef _CSP_IF_CAN_H_
-#define _CSP_IF_CAN_H_
+#ifndef _CSP_SOCKETCAN_H_
+#define _CSP_SOCKETCAN_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,17 +30,10 @@ extern "C" {
 #include <csp/csp.h>
 #include <csp/csp_interface.h>
 
-struct csp_can_driver {
-	int (*setup)(csp_iface_t *ifc, uint32_t id, uint32_t mask);
-	int (*send)(csp_iface_t *ifc, uint32_t id, uint8_t * data, uint8_t dlc);
-};
-
-csp_iface_t *csp_can_alloc(struct csp_can_driver *driver);
-
-int csp_can_setup(csp_iface_t *ifc);
+csp_iface_t *csp_socketcan_init(const char *dev, uint32_t bitrate);
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
 
-#endif /* _CSP_IF_CAN_H_ */
+#endif /* _CSP_SOCKETCAN_H_ */

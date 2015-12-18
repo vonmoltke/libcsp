@@ -274,7 +274,7 @@ int csp_route_work(uint32_t timeout) {
 	return 0;
 }
 
-CSP_DEFINE_TASK(csp_task_router) {
+CSP_DEFINE_TASK(csp_task_router, param) {
 
 	/* Here there be routing */
 	while (1) {

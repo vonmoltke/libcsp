@@ -248,9 +248,9 @@ void csp_kiss_init(csp_iface_t * csp_iface, csp_kiss_handle_t * csp_kiss_handle,
 	/* Setop other mandatories */
 	csp_iface->mtu = KISS_MTU;
 	csp_iface->nexthop = csp_kiss_tx;
-	csp_iface->name = name;
+	strncpy(csp_iface->name, name, CSP_IFNAMSIZ);
 
 	/* Regsiter interface */
-	csp_iflist_add(csp_iface);
+	csp_if_register(csp_iface);
 
 }

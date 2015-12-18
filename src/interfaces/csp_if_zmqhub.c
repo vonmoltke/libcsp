@@ -60,7 +60,7 @@ int csp_zmqhub_tx(csp_iface_t * interface, csp_packet_t * packet, uint32_t timeo
 
 }
 
-CSP_DEFINE_TASK(csp_zmqhub_task) {
+CSP_DEFINE_TASK(csp_zmqhub_task, param) {
 
 	while(1) {
 		zmq_msg_t msg;
@@ -146,7 +146,7 @@ int csp_zmqhub_init_w_endpoints(char _addr, char * publisher_endpoint,
 	csp_log_info("Task start %d\r\n", ret);
 
 	/* Regsiter interface */
-	csp_iflist_add(&csp_if_zmqhub);
+	csp_if_register(&csp_if_zmqhub);
 
 	return CSP_ERR_NONE;
 
