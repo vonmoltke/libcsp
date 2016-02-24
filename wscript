@@ -62,8 +62,9 @@ def options(ctx):
     gr.add_option('--with-driver-usart', default=None, metavar='DRIVER', help='Build USART driver. [windows, linux, None]')
 
     # OS    
-    gr.add_option('--with-os', metavar='OS', default='posix', help='Set operating system. Must be either \'posix\', \'macosx\', \'windows\' or \'freertos\'')
+    gr.add_option('--with-os', metavar='OS', default='posix', help='Set operating system. Must be one of \'posix\', \'macosx\', \'riot\', \'windows\' or \'freertos\'')
     gr.add_option('--with-freertos', metavar='PATH', default=None, help='Set path to FreeRTOS header files')
+    gr.add_option('--with-riot', metavar='RIOT_PATH', default=None, help='Set path to RIOT header files')
     gr.add_option('--enable-init-shutdown', action='store_true', help='Use init system commands for shutdown/reboot')
 
     # Options
@@ -80,8 +81,8 @@ def options(ctx):
 
 def configure(ctx):
     # Validate OS
-    if not ctx.options.with_os in ('posix', 'windows', 'freertos', 'macosx'):
-        ctx.fatal('--with-os must be either \'posix\', \'windows\', \'macosx\' or \'freertos\'')
+    if not ctx.options.with_os in ('posix', 'windows', 'freertos', 'macosx', 'riot'):
+        ctx.fatal('--with-os must be one of \'posix\', \'macosx\', \'riot\', \'windows\' or \'freertos\'')
 
     # Validate USART drivers
     if not ctx.options.with_driver_usart in (None, 'windows', 'linux'):
@@ -134,6 +135,10 @@ def configure(ctx):
             ctx.env.append_unique('INCLUDES_CSP', ctx.options.with_freertos)
     elif ctx.options.with_os == 'windows':
         ctx.env.append_unique('CFLAGS', ['-D_WIN32_WINNT=0x0600'])
+    # Add RIOT
+    elif ctx.options.with_os == 'riot':
+        if ctx.options.with_riot:
+            ctx.env.append_unique('INCLUDES_CSP', ctx.options.with_riot)
     
     # Store OS as env variable
     ctx.env.append_unique('OS', ctx.options.with_os)
